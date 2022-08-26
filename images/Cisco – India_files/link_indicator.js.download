@@ -1,0 +1,189 @@
+/**
+ * link_indicator.js
+ * $Revision: 1.3.20.2 $
+ *
+ *   Adds a tooltip to help identify links that leave the current theater's domain
+ *   (c) 1992-2012 Cisco Systems, Inc. All rights reserved.
+ *   Terms and Conditions: http://cisco.com/en/US/swassets/sw293/sitewide_important_notices.html'
+ *   Requires:
+ *   	JSON e.g. - '/web/CA/assets/link_indicator_en.json';
+ *   Future Requirement:
+ *   	Flag PNG - <img src="/web/CA/assets/flag_CA.png" class="link-flag"/>;
+ */ 
+
+if(typeof cdc =="undefined") cdc={};
+if(typeof cdc.util=="undefined") cdc.util={};
+if(typeof cdc.local=="undefined") cdc.local={};
+
+cdc.local.linkIndicator = function () {
+  // Controls
+  // var debug = false;
+    
+  var defaultLanguage = 'en';
+  var defaultCountry = 'US';
+  var pageUrl = cdc.util.locale.getLocale(location.href);
+
+  // Determine file name and location based off of current page information
+  var pageCountry = (pageUrl.getCountry) ? pageUrl.getCountry : defaultCountry;
+  var pageLanguage = (pageUrl.getLanguage) ? pageUrl.getLanguage : defaultLanguage;
+  // if (debug) console.log('LINKJS: determined pageCdc: '+pageCdc+', pageCountry: '+pageCountry+', pageLanguage: '+pageLanguage);
+
+  // Set location for JSON e.g. http://www.cisco.com/web/CA/assets/link_indicator_en.json
+  // todo - add env switch for stage? or is the file not on stage either?
+  var env = cdc.util.findEnvironment();
+  env = env==="prod"? "":"-stage";
+ // var jsonUrl = '//www'+env+'.cisco.com/web/' + pageCountry + '/assets/link_indicator_' + pageLanguage + '.json';
+ 
+   //http://www.cisco.com/c/dam/global/th_th/assets/link_indicator_th.json
+  var jsonUrl = '/c/dam/global/'+pageLanguage.toLowerCase()+'_' + pageCountry.toLowerCase()+'/assets/link_indicator_'+ pageLanguage + '.json';    
+  // Grab JSON data from file
+  jQuery.getJSON(jsonUrl, function(json) {    
+    // if JSON is blank or JSON switch is set to anything but TRUE, return false.  It will automatically quit if 404 or contains an error.
+    if (json == null || json.showIndicator != true) return false;
+    // if (debug) console.log('LINKJS: json:',json);
+    
+    // Set Generic CSS Overrides
+    var cssShowFlag = 'add-flag';
+    var cssHideFlag = 'omit-flag';
+      
+   // global list of US specific url patterns to show indicator for all theaters    
+    var whiteList = [
+      'GLOBALWHITE',
+      '/en/US/',      // 1.x
+      '/web/',        // 2.0 & Portals /cisco/web/
+      'en_(US|us)',
+      '/cgi-bin/login',  // login
+      'tools.cisco.com/', // include all Tools (not containing a specific locale)
+      '/cisco/software/',  // Support URLs 
+      '/offer/urls/'  // ads
+    ];
+    
+    // web/MX/index.html points to LA
+    var blackList = json.omitUrls.concat([ // Add JSON blacklist URLs to master black
+      'BLACKLIST',
+      '[a-z]{2}\_[^(US|IDC|AAG)][A-Z]{1,2}',                            // mingle #8351 - added support for "_IDC" & "_AAG" use cases. playing the short game.
+      '\/(web|web\/support)(\/|\%2F)[A-Z]{2,3}(\/|\%2F)',                  // needs to catch LA from the MX page
+      '(locale|Language)\=[a-z]{2}',
+      '(c|C)ountry\=([^(US)][A-Z]{1,2})',
+      'terms\_condition\_[A-z]{2,3}',
+      'privacy\_statement\_[A-z]{2,3}',
+      '\/global(\/|\_flagship\/)',                                      // catch the global pages
+      '\.cisco\.com\/web\/(go|login)',           
+      'cisco\.partnerlearning\.com/',                                       // by default this wouldn't show (not Cdc or /web/).
+      '(newsroom|globalnewsroom)\.cisco\.com\/',                        // by default below wouldn't show (no /web/)
+      '(supportforums|developer|investor)\.cisco\.com\/', 
+      '\.cisco\.com\/go\/'                                             
+    ]);
+    // Portal and 2.0 URL pattern, FUTURE - FAILS with countries with multiple languages
+    
+    var trackLinkArr = new Array();  // array created for tracking which links have already been checked before
+    
+    jQuery('body').on('mouseenter', 'a, area', function(evt) {
+
+      // if script has been run already on hovered link, quit.  Otherwise, log and continue
+      if (jQuery.inArray(evt.target, trackLinkArr) >= 0) {
+        return;
+      } else {
+        trackLinkArr.push(evt.target);
+      }
+
+      // grabs the link info from anywhere in the A element, (whereas this.getAttribute("href") only grabs it if in HREF)
+      // hinav has URLs, for example <a href="" class="peer" onclick="s_objectID=&quot;http://cdc-site-dev.cisco.com/ckassire/linkindicator/linkindicator.html_7&quot;;return this.s_oc?this.s_oc(e):true">Current page peer 2</a>
+      var checkUrl = String(this); // grabs the link info from anywhere in the A element, whereas this.getAttribute("href") only grabs it if in HREF
+      var linkInfo = cdc.util.locale.getLocale(checkUrl);
+      var linkCdc = (checkUrl.match(/(http)s?(:\/\/).*(cisco.com)/g)) ? true: false; // jira #7586: re-added to identify Cdc link patterns
+      var linkCountry = (linkInfo.getCountry) ? linkInfo.getCountry : false;
+      var linkLanguage = (linkInfo.getLanguage) ? linkInfo.getLanguage : false;
+      if (!linkCountry && !linkLanguage) { linkCountry = defaultCountry; linkLanguage = defaultLanguage; }
+      // if (debug) console.log('LINKJS: checkUrl:' + checkUrl + ', CDC: ' + linkCdc + ', Lang:'+ linkLanguage + ', Country:' + linkCountry);
+      
+      // doesn't catch all, but between this and the blacklist which catches most
+      var sameTheater = (linkLanguage) ? ((pageCountry == linkCountry && pageLanguage == linkLanguage) ? true : false) : ((pageCountry == linkCountry && pageLanguage == defaultLanguage) ? true : false);
+       
+      // if (debug) console.log('LINKJS: sameTheater guess: ' + sameTheater);
+      // if (debug) console.log('LINKJS: sameTheater explained: ' +pageCountry+' = '+linkCountry+' and '+pageLanguage+' = '+linkLanguage);
+
+      function addTitle (url, arrNum){
+        arrNum = typeof arrNum !== 'undefined' ? arrNum : 0; // FUTURE
+  
+        // modify the title attribute for display purposes
+        jQuery(url).attr('title',json.linkCountry[arrNum].display);
+
+        // mingle #8351 - link indicator enhancements
+        // if linked image has pre-existing title, append indicator to it in parens.
+        // - image titles take precedence over link titles.
+        var nestedImgTitle = jQuery('img', url).attr('title');
+        if (nestedImgTitle) {
+          jQuery('img', url).attr('title', nestedImgTitle + ' (' + json.linkCountry[arrNum].display + ')')
+        }
+        if(pageCountry === 'CN') //Currently enabling this feature just for china
+        {
+          nonLocaleLinks(url);
+        }
+        // if (debug) console.log('LINKJS: added title to: '+url);
+        return true;
+      }
+      
+      // first see if link itself has one of the classes
+      if (jQuery(this).hasClass(cssHideFlag)) return false;
+      if (jQuery(this).hasClass(cssShowFlag)) return addTitle(this); // end function
+  
+    
+      function urlListMatcher(urlList) {
+        // if (debug) console.log('urllist:',urlList);
+        // Preprocess the URL list before matching
+        var regexStr = "";
+        for (var i = 0, n = urlList.length; i < n; i++) {
+          regexStr += (regexStr == "" ? "" : "|") + urlList[i].replace (".", "\\.").replace ("?", "\\?");
+        }
+        // if (debug) console.log('regexStr',regexStr);
+        var regex = new RegExp  (regexStr); // "i" if ignore case.  "g" if multiple matches.
+        this.match = function (url) {
+          return regex.test (url);
+        };
+      }
+      
+      function nonLocaleLinks(url) {
+        //Opening locale links other than current locale in another tab 
+        var currentLink = jQuery(url);
+        var hrefURL = currentLink.attr('href');
+        var siteName = currentLink.attr('title');
+        if(hrefURL.indexOf('worldwide/locator.html') === -1) {
+          currentLink.removeAttr('target');
+          currentLink.attr('href',hrefURL);
+          //currentLink.attr("onclick","javascript:window.open('"+hrefURL+"','"+siteName+"')");
+          currentLink.on('click',function(e){
+            e.preventDefault();
+            window.open(hrefURL,siteName);
+          });
+        }
+      }
+      
+      // if cdc link and in white & not in black
+      /*
+      if (debug){
+        console.log('Is Cisco.com: '+linkCdc);
+        console.log('Match in JSONWhite: '+jsonWhiteListMatcher.match(checkUrl));
+        console.log('Match in White: '+whiteListMatcher.match(checkUrl));
+        console.log('Match in Black: '+blackListMatcher.match(checkUrl));
+        console.log('SHOW FLAG: '+(jsonWhiteListMatcher.match(checkUrl) || (linkCdc && whiteListMatcher.match(checkUrl) && !blackListMatcher.match(checkUrl))) );
+      }
+      */
+     	// Multi country support
+        for(i=0;i<json.linkCountry.length;i++)
+        {
+          var c = json.linkCountry[i];
+          c.display = c.countryText;  // Text Only Option
+
+          var jsonWhiteListMatcher =  new urlListMatcher(c.countryUrls);
+          var whiteListMatcher =      new urlListMatcher(whiteList);  
+          var blackListMatcher =      new urlListMatcher(blackList);
+          if(jsonWhiteListMatcher.match(checkUrl) || (linkCdc && whiteListMatcher.match(checkUrl) && !blackListMatcher.match(checkUrl))) return addTitle(this,i);
+        }
+      // if (debug) console.log('LINKJS: No Match, No Indicator');
+      
+    }); // end bind
+  }, 'text'); // getJSON
+}  
+jQuery(document).ready(function(){ cdc.util.ensureNamespace('cdc.local');cdc.local.linkIndicator(); });
+

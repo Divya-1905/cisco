@@ -1,0 +1,3 @@
+if (window.location.search.indexOf('showNewGrids=true')>-1) {
+    jQuery("body").addClass("cdc-transform");
+}

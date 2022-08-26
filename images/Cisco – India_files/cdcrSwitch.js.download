@@ -1,0 +1,171 @@
+if (window.cdc === undefined) { window.cdc = {}; }
+var loadRei = true;
+let urlParamsSrp = new URLSearchParams(window.location.search);
+let localeSrp = urlParamsSrp.get('locale');  
+
+if(window.location.href.indexOf('cdcsearch-stage.cisco.com')>-1 || window.location.href.indexOf('search.cisco.com')>-1){
+
+    if(localeSrp=="ruRU"){
+        loadRei = false;
+    }
+
+}
+
+if(loadRei && window.location.href.indexOf('/m/en_us/pub-hub')==-1 && window.location.href.indexOf('en/us/solutions/future-of-work/redesign-work-reimagine-the-future.html')==-1 && window.location.href.indexOf('/c/cec/dcoe.html')==-1 && window.location.href.indexOf('/m/en_us/solutions/full-stack-observability')==-1 && window.location.href.indexOf('/m/en_us/solutions/connect-secure-automate')==-1 && window.location.href.indexOf('/m/en_us/solutions/industries/portfolio-explorer.html')==-1 && window.location.href.indexOf('/m/en_us/solutions/enterprise-networks/wireless-6-and-6e.html')==-1 && window.location.href.indexOf('en/us/solutions/hybrid-work/redesign-work-reimagine-the-future.html')==-1 && window.location.href.indexOf('en/us/products/switches/nexus-9000-series-switches/nexus-9200-models-comparison')==-1){
+    
+        cdc.isRei=true;
+        document.getElementsByTagName('html')[0].classList.add('reimagine');
+
+        var styleEl = document.createElement('style');
+        styleEl.innerHTML = '#fwt-rei-utilities #fwt-partner-button:not(.show), #fwt-rei-utilities #fwt-partner-button-loggedin:not(.show) { display: none !important }';
+       // document.head.appendChild(styleEl);
+       
+        if(window.localStorage!=undefined && window.localStorage!=null){
+            if(window.localStorage.userInfoDispatcher!=undefined && window.localStorage.userInfoDispatcher!=null){
+                var uid = JSON.parse(window.localStorage.userInfoDispatcher);
+                if(uid!=undefined && uid!=null){
+                    var authState = uid.authState;
+                    if(authState==undefined || authState==null || authState=='anonymous'){
+                        if(uid.profile != undefined && uid.profile!=null){
+                            if(uid.profile.contactInfo){
+                                uid.profile.contactInfo.accesslevel="";
+                            }
+                            if(uid.profile.vps){
+                                uid.profile.vps.accesslevel="";
+                            }
+                            window.localStorage.userInfoDispatcher = JSON.stringify(uid);
+                        }
+                    }
+                }
+            }
+        }
+
+
+         if(window.location.href.indexOf('cdcsearch-stage.cisco.com')>-1 || window.location.href.indexOf('search.cisco.com')>-1){
+            const urlParams = new URLSearchParams(window.location.search);
+            let locale = urlParams.get('locale');   
+            
+            if(locale){
+                if (typeof cdc == "undefined")
+                cdc = {};
+
+                cdc.localizedLang = locale;
+                let stylesAdded = false;
+                
+                let srpInterval=setInterval(function(){
+                    if(locale=="enGB") locale="enUK";
+                    let masthead = document.querySelector('cdc-template');
+                    const cdcrLocations = {
+                        "enAU":"Australia & New Zealand - English", "ptBR":"Brazil%20-%20Portugu%C3%AAs", "enCA":"Canada - English", "frCA":"Canada%20-%20Fran%C3%A7ais", "frFR":"France%20-%20Fran%C3%A7ais", "deDE":"Germany - Deutsch", "enIN":"India - English", "enID":"Indonesia - English", "enIL":"Israel - English",  "itIT":"Italy - Italiano", "jaJP":"Japan%20-%20%E6%97%A5%E6%9C%AC%E8%AA%9E", "koKR":"Korea%20-%20%ED%95%9C%EA%B5%AD%EC%96%B4", "zhCN":"Mainland%20China%20-%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87", "enMY":"Malaysia - English","esMX":"Mexico%20-%20Espa%C3%B1ol", "nlNL":"Netherlands - Nederlands", "enPH":"Philippines - English", "enSG":"Singapore - English", "enZA":"South Africa - English", "frCH":"Switzerland%20-%20Fran%C3%A7ais", "deCH":"Switzerland - Deutsch", "enUK":"United Kingdom & Ireland - English", "enUS":"United States - English","enAE":"Middle East - English", "arAE":"Middle%20East%20-%20%20%D8%B9%D8%B1%D8%A8%D9%8A"
+                    };
+                    if(masthead && masthead.shadowRoot && masthead.shadowRoot.querySelector('#cdcrLocale')!=null){
+                        masthead.shadowRoot.querySelector('#cdcrLocale').innerHTML="<span>&#10003</span>"+decodeURI(cdcrLocations[locale]);
+                       // searchPhrase = document.querySelector('cdc-template').shadowRoot.querySelector('cdc-search').shadowRoot.querySelector('#srch-phrase');
+                       // console.log(' searchPhrase ',searchPhrase);
+                    }
+
+                    if(masthead && masthead.shadowRoot && masthead.shadowRoot.querySelector('#fw-skiplinks')!=null && !stylesAdded){
+                        stylesAdded = true;
+                        masthead.shadowRoot.querySelector('#fw-skiplinks').insertAdjacentHTML('beforebegin','<style>:host([dir=rtl]) #fwt-profile{width: 99.9%;}:host([dir=rtl]) #fwt-language-content .active .wc-wide{padding-right:30px!important}:host([dir=rtl]) #fwt-language-content .wc-narrow button{padding-left:0!important}:host([dir=rtl]) #fwt-sitearea-buttons button{margin-left:35px!important;margin-right:10px!important;padding:0!important}:host([dir=rtl]) #fwt-nav-button,:host([dir=rtl]) #fwt-sitearea-buttons{margin-right:0!important;margin-left:20px!important}:host([dir=rtl]) #fwt-language-content .wc-narrow button:after{border-bottom:2px solid #1b1c1d!important;border-right:2px solid #1b1c1d!important}:host([dir=rtl]) #fwt-language-content .active .wc-wide{padding-right:30px!important}@media only screen and (min-width: 64em){:host([dir=rtl]) #fwt-language{right:unset!important;left:40px!important}:host([dir=rtl]) .partner #fwt-partner{right:unset!important;left:200px!important}:host([dir=rtl]) #fwt-profile{right:unset!important;left:90px!important}}</style>');
+                    }
+                    
+    
+                },1000);
+                setTimeout(function(){
+                    clearInterval(srpInterval);
+                },20000);
+                           
+
+            }
+
+         }
+
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+
+    /*
+    if(document.querySelectorAll('.cdc-support-model').length || document.querySelectorAll('.cdc-support-series').length){
+        console.log('executing the snipet  to remove sved conentent');
+        document.querySelectorAll('#subtabs>ul li button').forEach(function(i,j){
+            if(i.getAttribute('data-config-metrics-item')=="Saved Content"){
+                i.parentElement.remove();
+                if( document.querySelector('#stc'+j)){
+                    document.querySelector('#stc'+j).remove();
+                }
+
+                
+            }
+        });
+    
+    }
+    */
+
+
+    let body_tag = document.querySelector("body");
+    if(body_tag != null){
+        if(body_tag.classList.contains("cdc-support-technology-series")) {
+            if(cdc != null && cdc.rc != null && cdc.rc.series != null
+                && cdc.rc.series.communitymsgs != null){
+                    cdc.rc.series.communitymsgs.noResultsBoard = "There are no community discussions for this board.";
+                }
+        }
+    }
+    if(body_tag != null){
+        if(body_tag.classList.contains("cdc-support-technology-series")) {
+            let find = document.querySelector('.board_selector .initial');
+
+            if(find != null){
+                let html = `<p class="reset" style="border: medium none; color: rgb(0, 116, 147);">Reset</p>`;
+                let btn = document.createElement('button');
+                btn.innerHTML = html;
+                btn.style.display = "none";
+                find.appendChild(btn);
+            }
+        }
+    }
+
+
+    let board_selector_reset = document.querySelector(".board_selector .initial button:nth-child(2) .reset");
+    if(board_selector_reset != null){
+        board_selector_reset.style.border = 'none';
+        board_selector_reset.style.color = '#007493';
+    }
+
+    if(cdc && cdc.localizedLang){
+        if(cdc.localizedLang=="fr_ca" || cdc.localizedLang == "en_ca"){
+            var footerSTFStyle = document.createElement('style');
+            footerSTFStyle.innerHTML = '.social.inner , .social.outer {display:none !important}';
+            document.head.appendChild(footerSTFStyle);
+        }
+    }  
+
+});
+
+
+// pride logo 
+setTimeout(function(){
+    const d = new Date();
+    let month = d.getMonth();
+    let resultURL = window.location.href;
+    
+    if (resultURL.includes('#')) {
+        resultURL = resultURL.slice(0, resultURL.indexOf('#'));
+    } 
+    if (resultURL.includes('?')){
+        resultURL = resultURL.slice(0, resultURL.indexOf('?'));
+    }
+    
+    if (month == 5 && (resultURL.indexOf('/en/us/')>-1 || resultURL.indexOf('/en_us/')>-1 || resultURL == "https://www.cisco.com/" || resultURL == "https://fdk-devint.cisco.com/" || resultURL == "https://fdk-stage.cisco.com/" || resultURL == "https://www.cisco.com" || resultURL == "https://fdk-devint.cisco.com" || resultURL == "https://fdk-stage.cisco.com")) {
+        const addCSS = s => document.head.appendChild(document.createElement("style")).innerHTML=s;
+        addCSS("#fwt-logo use, #fwt-logo g > path { fill: #355282; }#fwt-logo use:nth-of-type(3) { fill: #231f20; }#fwt-logo use:nth-of-type(4) { fill: #754c29; }#fwt-logo use:nth-of-type(5) { fill: #ed1c24; }#fwt-logo use:nth-of-type(6) { fill: #f7941d; }#fwt-logo use:nth-of-type(7) { fill: #f9ed32; }#fwt-logo use:nth-of-type(8) { fill: #00a651; }#fwt-logo use:nth-of-type(9) { fill: #1c75bc; }#fwt-logo use:nth-of-type(10) { fill: #662d91; }#fwt-logo use:nth-of-type(11) { fill: #ff5090; }#takeover-logo use, #takeover-logo g > path { fill: #355282; }#takeover-logo use:nth-of-type(3) { fill: #231f20; }#takeover-logo use:nth-of-type(4) { fill: #754c29; }#takeover-logo use:nth-of-type(5) { fill: #ed1c24; }#takeover-logo use:nth-of-type(6) { fill: #f7941d; }#takeover-logo use:nth-of-type(7) { fill: #f9ed32; }#takeover-logo use:nth-of-type(8) { fill: #00a651; }#takeover-logo use:nth-of-type(9) { fill: #1c75bc; }#takeover-logo use:nth-of-type(10) { fill: #662d91; }#takeover-logo use:nth-of-type(11) { fill: #ff5090; }");
+    }
+},100);
+
+
+var loginLinkStyle = document.createElement('style');
+loginLinkStyle.innerHTML = '.cdc-support-series #drawertab #retired-login-msg a.login-link, .cdc-support-technology-series #drawertab #retired-login-msg a.login-link{	padding-right:5px;padding-left:5px;}';
+document.head.appendChild(loginLinkStyle);
+
+
+

@@ -1,0 +1,2 @@
+typeof dscCallback  === 'function' & dscCallback  ({"netid":{"continent":"Asia","country_code":"IN","state":"Tamil Nadu","city":"Madurai","postcode":"625002","netid":"cec3687b82e0e6d445ee00984ee2f4c7"},"domain":{"domain":"bsnl.co.in","url":"http:\/\/bsnl.co.in\/","company_name":"Bharat Sanchar Nigam Ltd.","datestamp":"Wed Aug 24 2022 04:27:55 GMT-0000 (UTC)","duns":"916556638","country_code":"IN","domain_classification":"isp","dbi_density_current_qtr":"-","industry_cat":null,"industry_sub_cat":null},"abm":null,"contact_mtm":{},"mtm":{}});
+                

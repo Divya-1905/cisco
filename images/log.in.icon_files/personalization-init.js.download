@@ -1,0 +1,393 @@
+if (typeof cpe == "undefined") cpe = {};
+var showDownloads = true;
+
+cpe.trgt = (function() {
+
+  var gdprLogQueue =[];
+  var consoleLog = function(msg) {
+    var msg = msg || "";
+    if (msg !== "") {
+      gdprLogQueue.push(msg)
+    }
+    var qParams = document.location.search;
+    var regGdprLog = /(\?|\&)gdprLog\=true/ig;
+    // if log enabled through local storage setting or query param
+    if ((typeof localStorage === "object" && typeof localStorage["gdprLog"] !== "undefined") || (regGdprLog.test(qParams))) {
+      console.log(msg);
+    }
+  };
+
+  /**
+  gets requested cookie.
+  @param args { cookieName: string }
+  */
+  var getCookie = function(args) {
+    // LEGACY - if args is a string and not an object
+    if (!args.cookieName) {
+      args = {
+        cookieName: args
+      };
+    }
+
+    var dict = unpackParamString(document.cookie, /\s*;\s*/);
+    return dict[args.cookieName] || "";
+  };
+  
+
+  /**
+  takes a string, returns a dictionary
+  e.g. "foo=bar&foo%202=bar%202" => {"foo":"bar","foo 2":"bar 2"}
+  @param sep optional separator, defaults to "&" (can be string or regexp)
+  */
+  var unpackParamString = function(str, sep) {
+    sep = sep || '&';
+    var frags = str.split(sep),
+      dict = {},
+      frag,
+      ioe,
+      name,
+      val,
+      i;
+    for (i = 0; i < frags.length && (frag = frags[i]); i++) {
+      ioe = frag.indexOf('='); // expecting "foo=bar"
+      if (ioe < 0) {
+        continue;
+      }
+      name = unescape(frag.substring(0, ioe));
+      val = unescape(frag.substring(ioe + 1));
+      dict[name] = val;
+    }
+    return dict;
+  };
+
+     /**
+     * Keys returned for known environments
+     * @type {Array} of Strings
+     */
+    var KNOWN_ENVIRONMENT_KEYS = ["dev", "stage", "prod"];
+
+    /**
+     * Key returned for unknown environments
+     * @type {string}
+     */
+    var UNKNOWN_ENVIRONMENT_KEY = "unknown";
+
+    /**
+     * Returns a compound regular expression to consolidate the provided fragments.
+     * @param  {Array} patternFragments An array of strings to consolidate.
+     * @return {RegExp}                 The compound regular expression object.
+     */
+    var getEnvironmentRegExp = function(patternFragments) {
+        return new RegExp( "^(" + patternFragments.join("|") + ")(\\.|:|$)" )
+      };    
+ /**
+     * keys => environment description, values => Array holding strings to compare against hostnames
+     * @type {Object}
+     */
+    var PATTERN_FRAGMENTS = {
+        "prod": [
+          "www[0-9]*"
+          , "apps"
+          , "cdx"
+          , "cepx-active-prod[0-9]*"
+          , "wemapp-(author|publish)-(prod[0-9]|nprd)[0-9]*-[0-9]*"
+          , "www-(author|test|publish|author3|author4)"
+          , "www-(author|test|publish|author3|author4)-nprd"
+          , "wwwin-tools"
+          , "cisco-apps"
+          , "grs"
+          , "investor"
+          , "newsroom"
+          , "origin-software"
+          , "software"
+          , "sso[0-9]*"
+          , "cloudsso[0-9]*"
+          , "tools"
+          , "webapps"
+          , "wwwin"
+          , ".*\.cloudapps"
+          , ".*\.cisco"
+          , "^nic$"
+        ],
+        "stage": [
+          "apps-lt"
+          , "apps-stage"
+          , "cdx-stage"
+          , "(cepx|ecmx)-(active|staging|wip)-(lt|stage)[0-9]*"
+          , "fdk-author-lt"
+          , "fdk-author3-lt"
+          , "fdk-author4-lt"       
+          , "fdk-(author|publish)*[0-9]*-stage"
+          , "fdk-author3-stage"
+          , "fdk-author4-stage"       
+          , "fdk-author-pstage"
+          , "fdk-author3-pstage"
+          , "fdk-author4-pstage"       
+          , "fdk-author-pstage3"
+          , "(www(in)?-)?fdk-(publish-)?lt[0-9]*"
+          , "(www(in)?-)?fdk-(publish-)?.?stage[0-9]*"
+          , "wemapp-(author|publish)-.?stage[0-9]*-[0-9]*"
+          , "software-lt"
+          , "software-stage"
+          , "sso-nprd[0-9]*"
+          , "cloudsso-test[0-9]*"
+          , "tools-lt"
+          , "tools-stage"
+          , "www-lt[0-9]*"
+          , "www-(author-|publish-)*stage[0-9]*"
+          , "webapps-lt"
+          , "webapps-stage"
+          , "wwwin-tools-(dev|stage|lt)"
+          , "wwwin-stage"
+          , ".*\-stage\.cloudapps"
+          , ".*\-lt\.cloudapps"
+        ],
+        "dev": [
+          "apps-dev"
+          , "cdx-dev"
+          , "cepx-active-dev[0-9]*"
+          , "ecmx-active-dev[0-9]*"
+          , "fdk-(author-)?dev[0-9]*"
+          , "fdk-(author3-)?dev[0-9]*"
+          , "fdk-(author4-)?dev[0-9]*"
+          , "(www(in)?-)?fdk-(author-)?devint[0-9]*"
+          , "(www(in)?-)?fdk-(author3-)?devint[0-9]*"
+          , "(www(in)?-)?fdk-(author4-)?devint[0-9]*"
+          , "wemapp-(author|publish)-(dev|devint|idev)[0-9]*-[0-9]*"
+          , "software-dev"
+          , "sso-idev[0-9]*"
+          , "fdk-author4-idev[0-9]*"        
+          , "cloudsso-idev[0-9]*"
+          , "tools-dev"
+          , "www-(dev|idev)[0-9]*"
+          , "localhost"
+          , "webapps-dev"
+          , "wwwin-dev"
+          , ".*\-dev\.cloudapps"
+          , ".*\.cisco.com:4502" // add sandboxes to 'dev' classification
+        ]
+      };
+var matchEnvironment = function(envToMatch) {
+    envToMatch = envToMatch.replace(/\.cisco\.com$|\.cisco$/i, ""); // Remove the top-level domain, if any
+    var knownPatterns = {};
+    KNOWN_ENVIRONMENT_KEYS.forEach(function (environmentKey) {
+      knownPatterns[environmentKey] = getEnvironmentRegExp(PATTERN_FRAGMENTS[environmentKey]);
+    });
+    return (function (location) {
+        var result = UNKNOWN_ENVIRONMENT_KEY;
+        KNOWN_ENVIRONMENT_KEYS.forEach(function(environmentKey) {
+          if (knownPatterns[environmentKey].test(location)) {
+            result = (result === UNKNOWN_ENVIRONMENT_KEY) ? environmentKey : result;
+          }
+        });
+        return result;
+    }(envToMatch));
+};
+  // Function returns Performance flag
+  var getPerformanceFlag = function() {
+    var optCk = getCookie("OptanonConsent");
+    var patternPerf = /(\=|\,)[2]\:[0]/g;
+    if (optCk != "" && patternPerf.test(optCk)) {
+      return "false";
+    }
+    return "true";
+  };
+  // Function returns Targeting flag
+  var getTargetingFlag = function() {
+    var optCk = getCookie("OptanonConsent");
+    var patternTgt = /(\=|\,)[4]\:[0]/g;
+    if (optCk != "" && patternTgt.test(optCk)) {
+      return "false";
+    }
+    return "true";
+  };
+
+  var regionalMboxQueue = [];
+  /**
+   * Get ALL regional mboxes on page
+   */
+  var getAllRegionalMboxes = function() {
+    return [].slice.call(document.getElementsByClassName('mboxDefault'));
+  };
+  /**
+   * Get the last regional mbox currently rendered in the DOM
+   */
+  var getLastRegionalMbox = function() {
+    var everyMboxDivOnPage = getAllRegionalMboxes();
+    var lastMboxDivOnPage = everyMboxDivOnPage[everyMboxDivOnPage.length - 1];
+    return lastMboxDivOnPage;
+  };
+
+
+  var setElementVisibility = function (el, value) {
+    el.style.visibility = value;
+  };
+
+
+  /** Intercepts any calls that get made by regional mboxes and queues them to be executed after the Adobe Library becomes available. */
+  var mboxCreate = function() {
+    var lastMboxDivOnPage = getLastRegionalMbox();
+    lastMboxDivOnPage.id=arguments[0];
+    var data = {
+      arguments: [].slice.call(arguments),
+      div: lastMboxDivOnPage
+    };
+    regionalMboxQueue.push(data);
+  };
+  /** function that clears the addedd TargetableCss through page CSS code **/
+  var removeTargetableCss = function() {
+    consoleLog("## removeTargetableCss called ##");
+    setTimeout(function(){
+      if(typeof document.getElementsByClassName('pzn-styles')[0]!="undefined"){
+        consoleLog("## targetableCss removed ##");
+        head.removeChild(document.getElementsByClassName('pzn-styles')[0]);
+      }
+
+      //visible mbox regional mbox to show default content 
+      var regionalMboxElements = getAllRegionalMboxes();
+      consoleLog("## regionalMboxElements ##");
+      regionalMboxElements.forEach(function(el) {
+        consoleLog("## visible mboxdefault  ##",el);
+        setElementVisibility(el, 'visible');
+      });
+
+
+
+
+    },300);    
+  };
+  //Initialize Targeter
+  var initTarget = function() {
+    cpe.trgt.personalizationObj=cpe.trgt.personalizationObj!=null?cpe.trgt.personalizationObj:{};
+    cpe.trgt.personalizationObj.async=true;
+    if(window.location.href.indexOf("/dcloud-docs")>-1){
+      cpe.trgt.personalizationObj.loadDcloud=true;
+      cpe.trgt.personalizationObj.safetyTimeout=6000;
+      cpe.trgt.personalizationObj.hideMethod='elements';
+      cpe.trgt.personalizationObj.at_property='8c59ce03-251e-8108-8ea8-1b5719b51312';
+    }
+    Targeter.load(cpe.trgt.personalizationObj);
+  }
+  var launchTarget = function() {
+    var targetScript = document.createElement('script');
+    targetScript.type = "text/javascript";
+
+    if(environment==="prod" || environment ==="unknown"){
+      targetScript.src = "//www.cisco.com/c/dam/cdc/j/targeter-bundle-gdpr_min.js";
+    }else{
+      targetScript.src = "/c/dam/cdc/j/targeter-bundle-gdpr_min.js";
+    }
+    targetScript.onload = initTarget;
+    consoleLog("## launch of Targeterbundle ##");
+    consoleLog("Performance Flag: ",getPerformanceFlag());
+    if (getPerformanceFlag() === "true") {
+      head.appendChild(targetScript);
+    }
+  };
+  var launchVisitorId = function() {
+    var visitScript = document.createElement('script');
+    visitScript.type = "text/javascript";
+    if(environment==="prod" || environment ==="unknown"){
+      visitScript.src = "//www.cisco.com/c/dam/cdc/j/VisitorAPI.js";
+    }else{
+      visitScript.src = "/c/dam/cdc/j/VisitorAPI.js";
+    }
+    consoleLog("## launch of Visitor ID service ##");
+    if (getPerformanceFlag() === "true") {
+      head.appendChild(visitScript);
+    }
+  };
+  /** Initialize Personalization on page **/
+  var initPzn = function() {
+    console.log('ctm.gdpr.getPerformanceFlag ', ctm.gdpr.getPerformanceFlag());
+      if ((typeof ctm.gdpr === "object") && (typeof ctm.gdpr.getPerformanceFlag === "function") && (ctm.gdpr.getPerformanceFlag() == 'false')) {
+        consoleLog('#### Removing TargetableCSS #####');
+        removeTargetableCss();
+      } else {        
+          consoleLog("#### Initiating Visitor API and Targeter Bundle ######");
+          launchVisitorId();
+          launchTarget();
+      }
+  };
+  return {
+    regionalMboxQueue: regionalMboxQueue,
+    mboxCreate: mboxCreate,
+    removeTargetableCss: removeTargetableCss,
+    initPzn: initPzn,
+    gdprLogQueue:gdprLogQueue,
+    consoleLog:consoleLog,
+    findEnvironment:matchEnvironment
+  }
+
+})();
+setTimeout(cpe.trgt.removeTargetableCss,6000);
+//setTimeout(unhideRegionalmbox,6000);
+/** Intercepts any calls that get made by regional mboxes and queues them to be executed after the Adobe Library becomes available. */
+window.mboxCreate = cpe.trgt.mboxCreate;
+window.regionalMboxQueue=cpe.trgt.regionalMboxQueue;
+
+var head = document.getElementsByTagName('head')[0];
+var environment = "prod";
+if(window.environ!==undefined){
+    environment = window.environ;
+} else if(typeof cdc!="undefined" && typeof cdc.context !="undefined" && typeof cdc.context.findEnvironment==="function"){
+    environment=cdc.context.findEnvironment();
+}else{
+    environment = cpe.trgt.findEnvironment(window.location.host);
+}
+//OneTrust - Personalization Integration logic
+var isPznLibInitiated = false;
+if ((typeof ctm.gdpr === "object") && (typeof ctm.gdpr.isOTEnabled === "function") && ctm.gdpr.isOTEnabled()) {
+  if (typeof ctm.gdpr.initiatePznLib === "function") {
+    ctm.gdpr.initiatePznLib = function(evObj) {
+      // First time Personalization Initiation, delayed till OT groups are updated
+      if (typeof evObj === "object" && evObj['event'] === "PznInitialLoad" && !isPznLibInitiated) {
+        if ((typeof ctm.gdpr.eventqueue != "undefined") && (ctm.gdpr.eventqueue.length === 0)) {
+          cpe.trgt.consoleLog("First Visit: Personalization initiation delayed, till OT sets groups values in Cookie " + evObj['event']);
+          if (evObj['isEU'] === "false") {
+            // First Visit and isEU true : Personalization Init call
+            cpe.trgt.initPzn(true);
+          } else {
+            // First Visit and isEU false : removeTargetablecss call
+            cpe.trgt.consoleLog("### First Visit EU: Removing TargetableCSS ####");
+            cpe.trgt.removeTargetableCss();
+          }
+        }
+      }
+    };
+  }
+
+  //When ctm-core is loaded for the first time visit, blocking Personalization and initiating only through callback triggered in Optanon Wrapper
+  if (ctm.gdpr.isFirstVisit) {
+    //Signifies OT already set Optanon Consent Cookie
+    if (ctm.gdpr.eventqueue.length > 0 && ctm.gdpr.eventqueue[0]["event"] === "PznInitialLoad") {
+        cpe.trgt.consoleLog("First Visit: Personalization initiation delayed, till OT sets groups values in Cookie, eventqueue execution ");
+        if (ctm.gdpr.eventqueue[0]['isEU'] === "false") {
+          // First Visit and isEU true : Personalization Init call
+          cpe.trgt.initPzn(true);
+        } else {
+          // First Visit and isEU false : removeTargetablecss call
+          cpe.trgt.consoleLog("### First Visit EU: Removing TargetableCSS-- eventqueue execution ####");
+          cpe.trgt.removeTargetableCss();
+        }
+      
+      }  
+    if (ctm.gdpr.isOTCookieAvailable()) {
+      //console.log("First Visit : Personalization initiation not delayed");
+      cpe.trgt.consoleLog("First Visit : Personalization initiation not delayed");
+      isPznLibInitiated = true;
+      cpe.trgt.initPzn();
+    }
+
+  } else { // rest of the case initiate Personalization in normal workflow
+
+    //console.log("Subsequent Visit:  initiation not delayed");
+    cpe.trgt.consoleLog("Subsequent Visit: Personalization initiation not delayed");
+    isPznLibInitiated = true;
+    cpe.trgt.initPzn();
+  }
+
+} else { // For all other non OT domains
+  cpe.trgt.consoleLog("OT not enabled for this domain");
+  cpe.trgt.initPzn();
+}

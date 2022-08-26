@@ -1,0 +1,47 @@
+@media screen and (max-width: 480px){
+    .frist {
+        display: none;
+        /* width: 100%;
+        height: 5vh;
+        background: #2e5b88;
+        font-family: "ciscoSans", Arial, sans-serif; */
+    }
+    .myDiv img{
+        width: 18%;
+        /* height: 2vh; */
+    }
+
+    .swage{
+        color:black;
+    }
+
+    .break{
+    margin-top: -8%;
+}
+
+.nav{
+    display: none;
+}
+.long{
+    display: none;
+}
+.myDiv #menu{
+    display: block;
+    width: 20%;
+    padding-left: 55%
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+

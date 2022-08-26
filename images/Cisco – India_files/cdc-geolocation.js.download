@@ -1,0 +1,94 @@
+if (window.cdc === undefined) { window.cdc = {}; }
+if (cdc.geolocation === undefined) {
+    cdc.geolocation = (() => {
+        const loc = window.location.href,
+            locale = loc.replace(/^.*?\/(c|content)\/([A-Za-z]{2}_[A-Za-z]{2}).*?$/, "$2"),
+            hasRedirect = window.location.search.indexOf('country-redirect=true') !== -1,
+            isPublish = !document.documentElement.classList.contains('aem-authorLayer-Edit') && !document.documentElement.classList.contains('aem-authorLayer-Design');
+
+        let init = () => {
+            if (hasRedirect && isPublish) {
+                let getMessages = (url) => {
+                    return new Promise((res, rej) => {
+                        let xhr = new XMLHttpRequest();
+                        xhr.onreadystatechange = () => {
+                            if (xhr.readyState == 4 && xhr.status == 200) { res(JSON.parse(xhr.responseText)); }
+                            else if (xhr.status == 400) { rej(xhr.status); }
+                        };
+                        xhr.open('GET', url, true);
+                        xhr.send();
+                    });
+                };
+
+                let appendMessage = (messages) => {
+                    if (messages[locale] !== undefined) {
+                        const cl = 'fw-redirect-overlay',
+                            id = 'lightbox';
+                        let div = document.createElement('div'),
+                            style = document.createElement('style'),
+                            a = document.createElement('a'),
+                            button = document.createElement('button'),
+                            p = document.createElement('p'),
+                            // closeButton = document.querySelectorAll('.close-button')[0].cloneNode(true),
+                            text = messages[locale],
+                            tmp = [];
+
+                        var closeButtonHandler = (e) => { 
+                            if (typeof trackEvent !== undefined) { trackEvent.event('link', { lid: this.id, lpos: 'country redirect lightbox', linktext: 'close country redirect lightbox' }); }
+                            document.querySelector('#' + id + '.' + cl).remove();
+                        };
+
+                        let d1 = div.cloneNode();
+                        d1.id = id;
+                        d1.classList.add(cl);
+
+                        let d2 = div.cloneNode();
+                        d2.classList.add('lightbox-container');
+
+                        style.innerText = '.fw-redirect-overlay .lightbox-container { background: #fff; max-height: 500px; max-width: 500px; padding: 15px 35px 15px 20px; } .fw-redirect-overlay p button { color: #007493; }';
+
+                        tmp[0] = p.cloneNode();
+                        tmp[0].append(text.line1);
+
+                        button.addEventListener('mousedown', closeButtonHandler);
+                        button.value = text.line2;
+                        button.innerText = text.line2;
+                        tmp[1] = p.cloneNode();
+                        tmp[1].append(button);
+
+                        a.href = '//www.cisco.com/c/en/us/index.html';
+                        a.title = text.line3;
+                        a.innerText = text.line3;
+                        tmp[2] = p.cloneNode()
+                        tmp[2].append(a);
+
+                        d1.append(style);
+                        // d2.append(closeButton);
+                        d2.append(tmp[0]);
+                        d2.append(tmp[1]);
+                        d2.append(tmp[2]);
+                        d1.append(d2);
+
+/*                         closeButton.removeAttribute('id');
+                        closeButton.removeAttribute('aria-label');
+                        closeButton.value = 'Close';
+                        closeButton.addEventListener('mousedown', closeButtonHandler); */
+
+                        document.body.append(d1);
+                    }
+                };
+
+                let failure = (status) => {
+                    console.log('cdc-geolocation.js - failed to retrieve translations.json');
+                };
+
+                getMessages('/c/dam/assets/geolocation/translations.json').then(appendMessage, failure);
+            }
+        };
+
+        return {
+            init: init
+        };
+    })();
+    window.addEventListener('load', () => { cdc.geolocation.init(); });
+}

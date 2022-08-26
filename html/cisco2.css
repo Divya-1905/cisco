@@ -1,0 +1,993 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "ciscoSans", Arial, sans-serif;
+}
+
+@font-face {
+    font-family: "ciscoSans";
+    src: url("../fonts/cisco-sans.ttf");
+}
+
+@font-face {
+    font-family: "ciscoLight";
+    src: url("../fonts/CiscoSans-ExtraLight.ttf");
+}
+
+body {
+   
+    width: 100%;
+    background-repeat:no-repeat;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+.container {
+    background-color: #f4f5f6;
+}
+ .myDiv #menu{
+    display: none;
+} 
+
+.frist {
+
+    width: 100%;
+    height: 5vh;
+    background: #f4f5f6;
+    font-family: "ciscoSans", Arial, sans-serif;
+}
+
+.frist ul {
+    display: flex;
+    font-family: "ciscoSans", Arial, sans-serif;
+    justify-content: space-between;
+    margin-left: 73%;
+    list-style: none;
+    padding-top: .6%;
+    font-size: .8rem;
+    margin-right: 4%;
+}
+.fristfa-thin{
+width: 2%;
+}
+
+.frist ul #logIn {
+    padding-top: 1%;
+}
+/* .fristli img{
+    width: 9%;
+    padding-left: 33%; */
+/* } */
+.myDiv {
+    display: flex;
+    justify-content: flex-start;
+    height: 4vh;
+    font-family: "ciscoSans", Arial, sans-serif;
+}
+
+.myDiv img {
+    margin-top: 1%;
+    margin-left: 4%;
+    height: 8vh;
+    width: 8%;
+}
+
+.myDiv ul {
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    font-family: "ciscoSans", Arial, sans-serif;
+}
+
+.myDiv ul li {
+    list-style: none;
+    font-family: "ciscoSans", Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 34%;
+    margin-left: 60px;
+}
+
+.second {
+    display: flex;
+    font-family: "ciscoSans", Arial, sans-serif;
+    width: 100%;
+    background-color: #0d274d;
+    color: #ffff;
+    min-height: 50px;
+    justify-content: center;
+    align-items: center;
+    height: 185%;
+    margin-top: -1%;
+    height: 8vh;
+}
+
+.second ul {
+    align-items: center;
+    font-family: "ciscoSans", Arial, sans-serif;
+    display: flex;
+    background-color: #0d274d;
+    margin-right: 12%;
+}
+
+.second p {
+    font-weight: 300;
+    font-family: "ciscoSans", Arial, sans-serif;
+}
+
+.break {
+    margin-bottom: 1%;
+    list-style: none;
+    display: flex;
+    font-family: "ciscoSans", Arial, sans-serif;
+    background-color: #fff;
+    height: 14vh;
+    margin-top: -2%;
+    padding-left: 13%;
+    padding-top: 2%;
+
+    height: 8vh;
+}
+
+.break ul {
+    padding-top: 4%;
+    list-style: none;
+    font-family: "ciscoSans", Arial, sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    margin-top: -3%;
+    justify-content: space-between;
+    width: 64%;
+}
+
+.long {
+    padding: right;
+    margin-left: 40%;
+    margin-bottom: 2%;
+    word-spacing: 1%;
+
+
+}
+
+.nav {
+    width: 60%;
+}
+
+.long ul {
+    justify-content: space-between;
+    margin-left: -143%;
+    word-spacing: normal;
+    width: 130%;
+    display: flex;
+}
+
+#explore-cisco {
+    margin-left: -100px;
+}
+
+#searchImg {
+    margin-left: 0.2%;
+    width: 1.5%;
+    position: absolute;
+}
+
+.long li {
+    list-style: none;
+}
+
+.long .li img {
+    margin-top: -8px;
+}
+
+#explore {
+    background-color: #14a0eb;
+    border-radius: 30px;
+    width: 10%;
+    border: 1px solid #00bceb;
+    color: #0d274d;
+    margin-left: 1%;
+    padding: 0.6%;
+    font-size: 1rem;
+}
+
+h1 {
+    margin-top: 23%;
+}
+
+.h2 {
+    margin-left: 42%;
+    font-size: 26px;
+    font-weight: 400;
+    margin-top: 4%;
+}
+
+.swage button {
+    color: #0d274d;
+    height: 12%
+}
+
+.swap p {
+    margin-left: 32%;
+    margin-bottom: 2%;
+}
+
+.icons {
+    padding: 6px;
+    margin-left: -2%;
+   
+    word-spacing: 22%;
+    display: grid;
+    font-size: 18px;
+    grid-template-columns: auto auto auto auto auto auto;
+}
+
+#icon1 {
+    padding-left: 182%;
+}
+
+.icon2 {
+   
+    padding-right: 14%;
+}
+
+.icon3 {
+    padding-right: 25%;
+   
+}
+
+.swage {
+    justify-content: space-between;
+    background-color: #0d274d;
+    margin-top: -43.5%;
+    padding: 2%;
+    color: white;
+    padding-left: 11%;
+    width: 87%;
+}
+
+.swage img {
+    margin-bottom: 2%;
+}
+
+.dot {
+
+    margin-bottom: 19%;
+    display: grid;
+    background-image: url(../images/cisco\ ipic.webp);
+    background-size: contain;
+    height: 100vh;
+    background-repeat: no-repeat;
+    padding: 3% 5%;
+
+    
+
+}
+
+.scale img {
+    width: 105%;
+    margin-top: -31%;
+    height: 110%;
+    
+}
+
+.dot h1 {
+    margin-top: 1%;
+    color: #4D4C4C;
+  
+    display: flex;
+    position: relative;
+    margin-top: 9%;
+   
+    font-size: 4rem;
+    font-family: "ciscoLight", Arial, sans-serif;
+    font-weight: 100;
+
+}
+
+.scale h2 {
+    position: relative;
+    font-family: "ciscoLight", Arial, sans-serif;
+    background-color: #14a0eb;
+    border-radius: 30px;
+    width: 13%;
+    height: 5%;
+    border: 1px solid #00bceb;
+    color: #0d274d;
+    margin-left: 1%;
+    padding-top: 1%;
+    font-size: 1rem;
+    padding-left: 2%;
+}
+
+
+.dot #hybrid {
+    color: #4D4C4C;
+    display: flex;
+    margin-top: 1.3%;
+    position: relative;
+    font-family: "ciscoLight", Arial, sans-serif;
+
+
+}
+
+.dot scale style {
+    display: flex;
+    background-position: 50%;
+    background-repeat: no-repeat;
+}
+
+.point1 {
+   
+    height: 42vh;
+    width: 35%;
+    display: grid;
+    grid-template-columns: auto auto;
+    border-radius: 2%;
+    margin-left: 10%;
+    width: 35%;
+    margin-top: 2%;
+}
+
+.asse1 {
+
+    margin-left: 1%;
+    margin-top: 10%;
+    height: 3vh;
+    width: 83%;
+    background: #000;
+    color: white;
+    margin-top: 19%;
+}
+
+.content1 h3 {
+    margin-top: 6%;
+}
+
+.content1 {
+    z-index: 999;
+}
+
+.content1 p {
+    margin-top: 5%;
+    margin-left: -38%;
+
+
+}
+
+#watch {
+    margin-top: 103%;
+}
+
+.point1 p {
+    
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.line1 img {
+    position: absolute;
+    padding-left: 0%;
+    margin-top: -1%;
+    height: 60vh;
+    width: 45%;
+    border-radius: 2.5%;
+
+}
+
+.ten {
+
+    display: grid;
+    grid-template-columns: auto auto;
+   
+}
+
+.col {
+    width: 98%;
+}
+
+.five {
+    width: 34%;
+}
+
+.solution {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.eleven {
+    display: grid;
+    width: 100%;
+    padding: 0 10%;
+    grid-row-gap: 3%;
+    margin-top: -10%;
+    margin-bottom: 3%;
+    border-radius: 3%;
+    grid-template-columns: auto auto auto;
+    margin-left: 0%;
+}
+
+.eleven img {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 18px;
+}
+.col p {
+     margin-top: 4%;
+     margin-left: 1%;
+     width: 70%;
+     display: block;
+color:rgba(0, 0, 0, 0.007)
+ }
+ 
+ .col h4 {
+     margin-top: -28%;
+     padding-left: 7%;
+ }
+ .col h4 :hover + p{
+    color:white;
+ }
+.col img {
+    height: 37vh;
+    width: 80%;
+}
+.in :hover +   p{
+    color:black
+}
+
+.col button {
+    margin-top: 1%;
+    position: absolute;
+    margin-bottom: 41%;
+    font-size: 16px;
+   
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.in {
+
+    margin-left: -17%;
+}
+
+.in button {
+    margin-top: 1%;
+    position: absolute;
+    margin-bottom: 0%;
+    margin-left: 2%;
+    font-size: 16px;
+    background-color: gray;
+    width: 8%;
+    padding-left: -14%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.in img {
+    height: 37vh;
+    width: 69%;
+    
+}
+
+.in p {
+display:block;
+    margin-top: 6%;
+    margin-left: 4%;
+    width: 48%;
+    color: rgba(0, 0, 0, 0);
+
+}
+.vector h4:hover + p{
+    color:white;
+}
+
+.virtual button {
+    margin-top: 1%;
+    position: absolute;
+    margin-bottom: 41%;
+    margin-left: 0%;
+    font-size: 16px;
+   
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+}
+.virtual img:hover + p{
+    color:white;
+
+}
+.virtual h2 {
+    background-color: cadetblue;
+    width: 7%;
+    font-size: 18px;
+    border-radius: 19px;
+    margin-top: 2%;
+    position: absolute;
+    margin-left: 2%;
+    padding: 3px;
+}
+
+.virtual p {
+    margin-top: -22%;
+    margin-left: 8%;
+    width: 53%;
+    color: rgba(255, 255, 255, 0);
+}
+
+.in h4 {
+    margin-left: 4%;
+    margin-top: -24%;
+
+}
+
+.vector {
+    margin-left: -28%;
+}
+
+.vector button {
+    margin-top: 1.8%;
+    position: absolute;
+    margin-bottom: 41%;
+    margin-left: 4%;
+    font-size: 16px;
+  
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.vector img {
+    height: 37vh;
+    width: 61%;
+}
+
+.vector p {
+    display: block;
+    margin-left: 9%;
+    margin-top: -7%;
+    margin-bottom: 2%;
+    width: 57%;
+    color:rgba(0, 0, 0, 0)
+
+}
+
+.vector h4 {
+    margin-left: 9%;
+    margin-top: -26%;
+    margin-bottom: 10%;
+}
+
+
+.virtual img {
+    width: 78%;
+}
+.product h3 {
+    margin-top: -17%;
+}
+
+.product p {
+    color: rgba(0, 0, 0, 0);
+    width: 53%;
+}
+.product :hover + p{
+    color:rgb(29, 18, 18);
+}
+.product h2 {
+    background: gray;
+    width: 5%;
+    padding: 5px;
+    font-size: 18px;
+    border-radius: 19px;
+    margin-top: 1%;
+    position: absolute;
+    border-radius: 15px;
+}
+
+.blog button {
+    font-weight: 100;
+    margin-top: 1.8%;
+    position: absolute;
+    margin-bottom: 41%;
+    margin-left: -7%;
+    font-size: 16px;
+    
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+
+    border-radius: 15px;
+}
+
+.blog h3 {
+    margin-left: -25%;
+    width: 53%;
+    margin-top: -28%;
+}
+
+.blog h2 {
+    margin-left: -8%;
+    margin-top: 2%;
+    width: 64%;
+    background-color: #4D4C4C;
+
+    position: absolute;
+}
+
+.blog p {
+    display: block;
+    margin-left: -24%;
+    color: rgba(0, 0, 0, 0);
+}
+.blog img {
+    width: 80%;
+    margin-left: -29%;
+    margin-top: 2%;
+    height: 90%
+}
+.blog :hover + p{
+    color: white ;
+}
+.product img {
+    width: 68%;
+    height: 92%;
+}
+
+.visual {
+    color: white;
+}
+
+.visual button {
+    margin-top: 3%;
+    position: absolute;
+    margin-bottom: 41%;
+    margin-left: -10%;
+    font-size: 16px;
+    
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.visual img {
+    height: 39vh;
+    width: 83%;
+    margin-left: -14%;
+    margin-top: -7%;
+}
+
+.visual p {
+
+    margin-left: -25%;
+    margin-top: -7%;
+    margin-bottom: 2%;
+
+}
+
+.visual h4 {
+    margin-left: -24%;
+    margin-top: -5%;
+    margin-bottom: 10%;
+}
+
+.product {
+    margin-left: -17%;
+}
+
+.product button {
+    margin-top: 1%;
+    position: absolute;
+    margin-bottom: 41%;
+    margin-left: 0%;
+    font-size: 16px;
+   
+    width: 11%;
+    background-color: gray;
+    width: 8%;
+    padding-left: -7%;
+    color: black;
+    font-weight: 100;
+    border-radius: 15px;
+
+}
+
+.visual p {
+
+    margin-left: -25%;
+    margin-top: -7%;
+    margin-bottom: 2%;
+
+}
+
+.visual h4 {
+    margin-left: -24%;
+    margin-top: -5%;
+    margin-bottom: 10%;
+}
+
+.box {
+    margin: 3%;
+    position: relative;
+    width: 30%;
+    height: 33vh;
+    border-radius: 3%;
+    margin-left: 3%;
+    align-items: center
+}
+
+.webinar {
+    display: grid;
+    grid-template-columns: auto auto;
+    background-color: #00bceb;
+    width: 89%;
+    height: 56vh;
+    margin-left: 9%;
+    font-family: "ciscoLight", Arial, sans-serif;
+
+}
+
+.webinar div:nth-child(1) {
+    margin-top: 20%;
+    margin-left: 4%;
+
+    font-size: 20px;
+}
+
+.webinar p {
+    width: 80%;
+    font-size: 18px;
+}
+
+.webinar img {
+
+    height: 56VH;
+    width: 122%;
+    margin-left: -22%;
+
+}
+
+.webinar h2 {
+    margin-bottom: 5%;
+}
+
+.webinar h3 {
+    margin-top: -18%;
+    margin-bottom: 19%;
+    font-size: 16px;
+    background-color: #545454a1;
+    width: 11%;
+    padding-left: 1%;
+    color: white;
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.bright {
+    display: grid;
+    grid-template-columns: auto auto;
+    background-image: url(/images/second.webp);
+    background-repeat: no-repeat;
+    width: 170%;
+    height: 75vh;
+    margin-top: 2%;
+    margin-left: 27%;
+    font-family: "ciscoLight", Arial, sans-serif;
+}
+
+.bright div:nth-child(1) {
+    margin-top: 20%;
+    margin-left: 4%;
+
+    font-size: 20px;
+}
+
+.bright p {
+    width: 89%;
+    font-size: 18px;
+    margin-top: -12%;
+    margin-left: 3%;
+    color: white;
+}
+
+.bright h2 {
+    margin-top: 135%;
+    
+    margin-left: -202%;
+}
+
+.bright h3 {
+    margin-top: 2%;
+    margin-bottom: 76%;
+    font-size: 16px;
+   
+    background-color: #545454a1;
+    width: 30%;
+    padding-left: 5%;
+    color: rgb(51, 15, 15);
+    font-weight: 100;
+    border-radius: 15px;
+}
+
+.work {
+    
+    width: 186%;
+    height: -46%;
+   
+    margin-left: 49%;
+    margin-top: 1%;
+    margin-bottom: 25%;
+    font-family: "ciscoLight", Arial, sans-serif
+}
+
+.work div:nth-child(1) {
+    margin-top: 20%;
+    margin-left: 4%;
+
+    font-size: 20px;
+}
+
+.work p {
+    width: 22%;
+    font-size: 18px;
+    margin-left: 2%;
+}
+
+.work img {
+
+    height: 74vh;
+    width: 22%;
+   
+}
+
+.work h2 {
+    width: 18%;
+    margin-top: -13%;
+    margin-left: 2%;
+}
+
+.work h3 {
+    margin-top: -18%;
+    margin-bottom: 19%;
+    font-size: 16px;
+    background-color: #fff;
+    width: 11%;
+    padding-left: 1%;
+    color: rgb(22, 9, 9);
+    font-weight: 100;
+    border-radius: 15px;
+}
+.grey{
+    background-color:  #f4f5f6;
+    height: 30vh;
+   
+}
+
+.primary {
+    margin-bottom: 1%;
+    list-style: none;
+    display: flex;
+    font-family: "ciscoSans", Arial, sans-serif;
+    
+    height: 14vh;
+    margin-top: 9%;
+    padding-left: 13%;
+    padding-top: 2%;
+  
+    width: 266%;
+  
+}
+
+.primary ul {
+    padding-top: 4%;
+    list-style: none;
+    font-family: "ciscoSans", Arial, sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    margin-top: -3.5%;
+    justify-content: space-between;
+    width: 9%;
+    margin-left: -2.5%;
+}
+
+.primary ul li {
+    display: flex;
+    width: 100%;
+    margin-right: -14%;
+}
+.socialinner{
+    padding-left: 87%;
+    margin-top: -7%;
+    color: #606162;
+    display: flex ;
+    flex-direction: row;
+    
+    
+}
+.socialinner i{
+    background-color: gray;
+    padding: 4%;
+    color: white;
+    height: 109%;
+    border-radius: 64%;
+    font-size: 81%;
+    padding-top: 4%;
+    padding-bottom: 3%;
+}
+.fa-linkedin-square:hover{
+    background-color:#005073;
+}
+.fa-youtube-play:hover{
+    background-color: red;
+}
+.fa-twitter:hover{
+    background-color:	#55acee;
+}
+.fa-facebook:hover{
+    background-color:	#3b5998;
+}
+
+.fa2{
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    text-rendering: auto;
+    border-radius: 49%;
+    margin-right: 5%;
+    font-size: 28px;
+    border: 5px solid #606162;
+    background-color: #eee;
+    -webkit-font-smoothing: antialiased
+}
+.fa{
+    margin-right: 10%; 
+}
+
+.secondary{
+    margin-top: -6%;
+}
+.secondary ul{
+    display: flex;
+    width: 63%;
+    margin-left: 6%;
+    text-decoration: none;
+    padding-left: 0%;
+    justify-content: space-between;
+    list-style-type: none
+}
+.slide{
+    position: fixed;
+    margin-left: 84%;
+}
+.slide img{
+    margin-bottom: 2%;
+    width: 77%;
+    height: 7vh;
+    border-radius: 52%;
+    border: 2px #5acda2 solid;
+}
+.footer{
+padding-left: 6%;
+margin-top: 2%;
+}
+
+
+
